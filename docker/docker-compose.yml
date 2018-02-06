@@ -2,40 +2,55 @@ version: "3.2"
 
 services:
   keycloak_db:
-    image: postgres:latest
-    ports:
-      - "15432:15432"
+    image: mysql:5.7
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=qgZqZGdoe5loJ0OrZvq36LBr --execute \"SHOW DATABASES;\""
+      interval: 3s
+      timeout: 1s
+      retries: 5
     environment:
-        - POSTGRES_DB=keycloak
-        - POSTGRES_USER=keycloak
-        - POSTGRES_PASSWORD=6jhVPaQWhgEMl0sXPnNmkLfS
-        - POSTGRES_ROOT_PASSWORD=qgZqZGdoe5loJ0OrZvq36LBr
+      MYSQL_ROOT_PASSWORD: qgZqZGdoe5loJ0OrZvq36LBr
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: 6jhVPaQWhgEMl0sXPnNmkLfS
     volumes:
-      - keycloak_postgresql:/var/lib/postgresql
-      - keycloak_postgresql_data:/var/lib/postgresql/data
+      - keycloak_mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - eci
 
   keycloak:
-      image: jboss/keycloak-postgres
-      environment:
-        - KEYCLOAK_LOGLEVEL=DEBUG
-        - POSTGRES_USER=keycloak
-        - POSTGRES_DATABASE=keycloak
-        - POSTGRES_PASSWORD=6jhVPaQWhgEMl0sXPnNmkLfS
-        - POSTGRES_PORT_5432_TCP_ADDR=postgres
-        - POSTGRES_PORT_5432_TCP_PORT=5432
-        - KEYCLOAK_USER=admin
-        - KEYCLOAK_PASSWORD=pikathnoOoEezsSc0l8ZCfZs
-      links:
-        - keycloak_db:postgres
-      ports:
-        - "18443:8443"
-        - "18080:8080"
-      volumes:
-        - keycloak_data:/data
+    image: jboss/keycloak
+    depends_on:
+      - keycloak_db
+    environment:
+      KEYCLOAK_LOGLEVEL: DEBUG
+      MYSQL_USER: keycloak
+      MYSQL_DATABASE: keycloak
+      MYSQL_PASSWORD: 6jhVPaQWhgEMl0sXPnNmkLfS
+      MYSQL_ADDR: keycloak_db
+      MYSQL_PORT: 3306
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: password
+    ports:
+      - "18443:8443"
+      - "18080:8080"
+    volumes:
+      - keycloak_data:/data
+    networks:
+      - eci
 
 volumes: 
-  keycloak_postgresql:
-  keycloak_postgresql_data:
+  keycloak_mysql:
   keycloak_data:
+
+# required to get along with VPN from mgm to ECI
+networks:
+  eci:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.58.0.0/16
 
 
