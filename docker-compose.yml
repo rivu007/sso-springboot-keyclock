@@ -1,7 +1,8 @@
 version: "3.2"
 
-#Define all the service here
+# Define all the service here
 services:
+  # Database for Keycloak
   keycloak_db:
     image: mysql:5.7
     healthcheck:
@@ -21,10 +22,16 @@ services:
     networks:
       - eci
 
+  # Keycloak service
   keycloak:
     image: jboss/keycloak
     depends_on:
       - keycloak_db
+    healthcheck:
+      test: "curl -sS http://localhost:8080/auth/realms/master || exit 1"
+      interval: 3s
+      timeout: 1s
+      retries: 5
     environment:
       KEYCLOAK_LOGLEVEL: DEBUG
       MYSQL_USER: keycloak
