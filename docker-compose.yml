@@ -1,5 +1,6 @@
 version: "3.2"
 
+#Define all the service here
 services:
   keycloak_db:
     image: mysql:5.7
