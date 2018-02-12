@@ -2,7 +2,10 @@
 # keycloak specific properties
 # ===================================================================
 keycloak:
-  auth-server-url: https://localhost:18443/auth
+  auth-server-url: http://localhost:18080/auth
   realm: sso
   resource: product-app
-  public-client: true
+  credentials:
+    secret: 8b817f7e-b238-409e-8b75-72880b66d15d
+  bearer-only: true
+  ssl-required: external
