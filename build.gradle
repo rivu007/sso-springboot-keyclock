@@ -55,6 +55,7 @@ dependencies {
 	compile('org.keycloak:keycloak-spring-boot-starter')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-security')
+	compile('org.springframework.boot:spring-boot-starter-actuator')
 
     //Lombok
     compileOnly('org.projectlombok:lombok')
