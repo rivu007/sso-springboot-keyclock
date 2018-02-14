@@ -1,7 +1,7 @@
 {
   "id": "sso",
   "realm": "sso",
-  "displayName": "Lidl Digital SSO",
+  "displayName": "SSO",
   "notBefore": 0,
   "revokeRefreshToken": false,
   "refreshTokenMaxReuse": 0,
@@ -33,6 +33,36 @@
   "quickLoginCheckMilliSeconds": 1000,
   "maxDeltaTimeSeconds": 43200,
   "failureFactor": 30,
+  "users" : [
+    {
+      "username" : "user",
+      "enabled": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "test" }
+      ],
+      "realmRoles": [ "user" ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    },
+    {
+      "username" : "admin",
+      "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "credentials" : [
+        { "type" : "password",
+          "value" : "admin" }
+      ],
+      "realmRoles": [ "admin" ],
+      "clientRoles": {
+        "account": ["view-profile", "manage-account"]
+      }
+    }
+  ],
   "roles": {
     "realm": [
       {
@@ -880,7 +910,7 @@
       "surrogateAuthRequired": false,
       "enabled": true,
       "clientAuthenticatorType": "client-secret",
-      "secret": "**********",
+      "secret": "8b817f7e-b238-409e-8b75-72880b66d15d",
       "redirectUris": [
         "http://localhost:8080/*"
       ],
