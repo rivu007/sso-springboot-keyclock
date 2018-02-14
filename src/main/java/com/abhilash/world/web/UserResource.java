@@ -1,7 +1,5 @@
 package com.abhilash.world.web;
 
-import java.security.Principal;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,14 +16,6 @@ public class UserResource {
 
     @Autowired
     KeycloakRestTemplate keycloakRestTemplate;
-
-    /*@Value("${database.service.url}")
-    private String endpoint;*/
-
-    @GetMapping(path = "/")
-    public ResponseEntity<?> index(Principal principal){
-        return ResponseEntity.ok("User id: " + principal.getName());
-    }
 
     @GetMapping(path = "/protected1")
     public ResponseEntity<?> firstProtectedResource(){
