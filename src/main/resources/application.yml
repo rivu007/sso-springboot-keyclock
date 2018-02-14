@@ -7,5 +7,5 @@ keycloak:
   resource: product-app
   credentials:
     secret: 8b817f7e-b238-409e-8b75-72880b66d15d
+  public-client: false
   bearer-only: true
-  ssl-required: external

@@ -1,9 +1,8 @@
 package com.abhilash.world;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import static org.springframework.http.HttpMethod.POST;
 
+import java.util.Arrays;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.core.Response;
@@ -16,19 +15,30 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.AccessTokenResponse;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 
+/**
+ * This is the base class which setups up the basic structure to run the test.
+ *
+ * Every test should extend this class.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class SingleSignonApplicationTest {
@@ -50,7 +60,7 @@ public abstract class SingleSignonApplicationTest {
 
     @PostConstruct
     public void init() {
-        this.keycloak = getKeycloakClient();
+        this.keycloak = initKeycloakClient();
     }
 
     @Before
@@ -59,8 +69,8 @@ public abstract class SingleSignonApplicationTest {
                 .apply(SecurityMockMvcConfigurers.springSecurity())
                 .build();
 
-        setupKeycloakUser(keycloak, "test", "test", "user");
-        setupKeycloakUser(keycloak, "admin", "admin", "admin");
+        setupKeycloakUser("test", "test", "user");
+        setupKeycloakUser("admin", "admin", "admin");
     }
 
     @After
@@ -80,16 +90,60 @@ public abstract class SingleSignonApplicationTest {
         return keycloak.realm(keycloakSpringBootProperties.getRealm());
     }
 
+    /**
+     * Returns the @{link MockMvc} instance which can be used by the other classes extending this class.
+     *
+     * @return instance of MockMvc
+     */
     protected MockMvc mvc() {
         return mockMvc;
     }
 
     /**
-     * Builder pattern to get the instance of keycloak instance.
+     * Retrieves the access token from Keycloak.
+     *
+     * @param username of the user to issue the access token
+     * @param password of the user to issue the access token
+     * @return access token
+     */
+    protected String obtainAccessToken(String username, String password) throws Exception {
+
+        String authServer = keycloakSpringBootProperties.getAuthServerUrl();
+        String realm = keycloakSpringBootProperties.getRealm();
+
+        final HttpEntity<?> entity = createHttpEntity(username, password);
+
+        ResponseEntity<AccessTokenResponse> accessTokenResponse =
+                rest.exchange(String.format("%s/realms/%s/protocol/openid-connect/token", authServer, realm),
+                        POST,
+                        entity,
+                        AccessTokenResponse.class);
+
+        return accessTokenResponse.getBody().getToken();
+
+    }
+
+    private HttpEntity<?> createHttpEntity(String username, String password) {
+
+        final org.springframework.http.HttpHeaders requestHeaders = new org.springframework.http.HttpHeaders();
+        requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "password");
+        body.add("client_id", keycloakSpringBootProperties.getResource());
+        body.add("username", username);
+        body.add("password", password);
+        body.add("client_secret", keycloakSpringBootProperties.getCredentials().get("secret").toString());
+
+        return new HttpEntity<>(body, requestHeaders);
+    }
+
+    /**
+     * Initialise the keycloak admin Client.
      *
      * @return Keycloak client instance
      */
-    private Keycloak getKeycloakClient() {
+    private Keycloak initKeycloakClient() {
         return KeycloakBuilder.builder()
                 .serverUrl(keycloakSpringBootProperties.getAuthServerUrl())
                 .realm("master")
@@ -100,10 +154,13 @@ public abstract class SingleSignonApplicationTest {
     }
 
     /**
-     * Setup a dummy user in keycloak for running the test
+     * Create user in keycloak for running the test
+     *
+     * @param username of the user to be created
+     * @param password of the user to be created
+     * @param role of the user to be created
      */
-    private void setupKeycloakUser(Keycloak keycloak,
-                                   String username,
+    private void setupKeycloakUser(String username,
                                    String password,
                                    String role) {
 
@@ -118,6 +175,7 @@ public abstract class SingleSignonApplicationTest {
         credential.setType(CredentialRepresentation.PASSWORD);
         credential.setValue(password);
 
+        // Set the user specific details
         user = new UserRepresentation();
         user.setUsername(username);
         user.setFirstName(username);
@@ -135,5 +193,4 @@ public abstract class SingleSignonApplicationTest {
             userResource.get(userId).roles().realmLevel().add(Arrays.asList(realmRole));
         }
     }
-
 }

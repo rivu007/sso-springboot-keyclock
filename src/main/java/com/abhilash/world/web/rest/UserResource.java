@@ -1,4 +1,4 @@
-package com.abhilash.world.web;
+package com.abhilash.world.web.rest;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class UserResource {
         return ResponseEntity.ok("Not Bad! Looks like SSO is working fine...");
     }
 
-    @GetMapping(path = "/unprotected")
+    @GetMapping(path = "/public")
     public ResponseEntity<?> unprotected(){
         return ResponseEntity.ok("This is not the end of the world...");
     }

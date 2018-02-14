@@ -1,4 +1,4 @@
-package com.abhilash.world.web;
+package com.abhilash.world.web.rest;
 
 import java.security.Principal;
 
