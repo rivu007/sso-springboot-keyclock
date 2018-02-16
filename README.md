@@ -6,6 +6,7 @@
 * Spring Boot
 * Spring Security
 * Spring Actuator
+* Swagger
 * Keycloak as authentication server
 * MySQL (used by keycloak)
 * Docker
@@ -76,8 +77,16 @@ $ gradlew test
 
 1. First you need to build the docker image. Run `gradle clean build docker` to build the docker image. To verify the creating of the image 
    issue `docker images | grep single-signon`
-2 Run `docker-compose -f docker-compose/prod.yml up -d`
+2. Run `docker-compose -f docker-compose/prod.yml up -d`
 
+
+## REST API documentation
+
+Please browse to below url for REST api docs:
+
+```$xslt
+http://localhost:8080/swagger-ui.html
+```
 
 ## Resources
 

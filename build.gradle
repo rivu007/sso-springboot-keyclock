@@ -60,13 +60,17 @@ dependencies {
 
     //Keycloak Admin client and it's dependencies
     compile group: 'org.keycloak', name: 'keycloak-admin-client', version: keycloakAdminClientVersion
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.9'
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.2'
-    compile group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: '3.0.24.Final'
-    compile group: 'org.jboss.resteasy', name: 'resteasy-client', version: '3.0.24.Final'
-    compile group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: '3.0.24.Final'
-    compile group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: '1.0.0.Final'
-    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonDatabind
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: httpClient
+    compile group: 'org.jboss.resteasy', name: 'resteasy-multipart-provider', version: restEasyClient
+    compile group: 'org.jboss.resteasy', name: 'resteasy-client', version: restEasyClient
+    compile group: 'org.jboss.resteasy', name: 'resteasy-jackson2-provider', version: restEasyClient
+    compile group: 'org.jboss.spec.javax.ws.rs', name: 'jboss-jaxrs-api_2.0_spec', version: jbossJaxrsApi
+    compile group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: jaxRs
+
+	//Swagger plugin
+    compile group: 'io.springfox', name: 'springfox-swagger2', version: swaggerCore
+    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: swaggerUI
 
     //Lombok
     compileOnly('org.projectlombok:lombok')

@@ -9,3 +9,11 @@ keycloak:
     secret: 8b817f7e-b238-409e-8b75-72880b66d15d
   public-client: false
   bearer-only: true
+
+# ===================================================================
+# Swagger specific properties
+# ===================================================================
+swagger:
+  title: SSO
+  description: Single sign on service with Keycloak authentication server.
+  version: 1.0.0
