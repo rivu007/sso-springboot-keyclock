@@ -19,8 +19,6 @@ services:
       - keycloak_mysql:/var/lib/mysql
     ports:
       - "3306:3306"
-    networks:
-      - eci
 
   # Keycloak service
   keycloak:
@@ -46,19 +44,9 @@ services:
       - "18080:8080"
     volumes:
       - keycloak_data:/data
-    networks:
-      - eci
 
 volumes:
   keycloak_mysql:
   keycloak_data:
-
-# required to get along with VPN from mgm to ECI
-networks:
-  eci:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.58.0.0/16
 
 
