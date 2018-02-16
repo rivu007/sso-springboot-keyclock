@@ -41,7 +41,8 @@
       "lastName": "User",
       "credentials" : [
         { "type" : "password",
-          "value" : "test" }
+          "value" : "user"
+        }
       ],
       "realmRoles": [ "user" ],
       "clientRoles": {
@@ -55,7 +56,8 @@
       "lastName": "User",
       "credentials" : [
         { "type" : "password",
-          "value" : "admin" }
+          "value" : "admin"
+        }
       ],
       "realmRoles": [ "admin" ],
       "clientRoles": {
