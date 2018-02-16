@@ -40,7 +40,7 @@ To start this web application just follow these steps:
 
 ##### Setting Up a Keycloak Server
 
-1. Run docker-compose as deamon mode use : `docker-compose -f docker-compose/dev.yml up -d`
+1. Run Keycloak server as docker-compose deamon mode : `docker-compose -f docker-compose/dev.yml up -d`
 
 2. Navigate to the Keycloak admin console: `https://localhost:18443/auth`
 
@@ -53,7 +53,11 @@ Once the import is done. You should see a new realm named: `sso`. That's it!
 
 ##### Setting up the SSO REST service
 
-5. It's time to run the SSO REST service by issuing: `gradlew bootRun` 
+5. It's time to run the SSO REST service by issuing: 
+
+```
+$ ./gradlew bootRun
+``` 
 
 To do a quick sanity check, please browse to : `http://localhost:8080/health`
 
@@ -72,7 +76,6 @@ Expected Response:
 $ gradlew test
 ```
 
-
 ## Running end2end : REST service with keycloak
 
 1. First you need to build the docker image. Run `gradle clean build docker` to build the docker image. To verify the creating of the image 
@@ -84,7 +87,7 @@ $ gradlew test
 
 Please browse to below url for REST api docs:
 
-```$xslt
+```
 http://localhost:8080/swagger-ui.html
 ```
 
