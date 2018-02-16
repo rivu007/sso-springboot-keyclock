@@ -91,6 +91,20 @@ Please browse to below url for REST api docs:
 http://localhost:8080/swagger-ui.html
 ```
 
+## Lombok Setup:
+
+* IntelliJ
+
+  * Go to `File > Settings > Build, Execution, Deployment > Compiler > Annotation Processing`
+  * Check `Enable Annotation processing`
+
+* Eclipse
+
+  * Change to directory which contains lombok.jar (if not available download it)
+  * Run `java -jar lombok.jar` in console to open Lombok Installation Wizard
+  * Define path to eclipse.exe
+  * Restart eclipse
+
 ## Resources
 
 * [Keycloak website](http://www.keycloak.org/)
